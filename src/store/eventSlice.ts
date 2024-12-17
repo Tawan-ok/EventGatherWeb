@@ -1,31 +1,35 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-// Interface ของ Event
 interface Event {
   id: string;
-  name: string;
+  title: string;
+  description: string;
   date: string;
   location: string;
 }
 
-// สร้าง State Interface
 interface EventState {
   events: Event[];
   loading: boolean;
   error: string | null;
 }
 
-// State เริ่มต้น
 const initialState: EventState = {
   events: [],
   loading: false,
   error: null,
 };
 
-// สร้าง Thunk สำหรับ Get All Events
+// Thunk สำหรับ get-all event
 export const fetchEvents = createAsyncThunk('events/fetchEvents', async () => {
   const response = await axios.get('http://localhost:8080/events/get-all');
+  return response.data;
+});
+
+// Thunk สำหรับ create event
+export const createEvent = createAsyncThunk('events/createEvent', async (eventData: Partial<Event>) => {
+  const response = await axios.post('http://localhost:8080/events', eventData);
   return response.data;
 });
 
@@ -47,9 +51,11 @@ const eventSlice = createSlice({
       .addCase(fetchEvents.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || 'Failed to fetch events';
+      })
+      .addCase(createEvent.fulfilled, (state, action) => {
+        state.events.push(action.payload); // เพิ่ม Event ใหม่เข้ามา
       });
   },
 });
 
-// Export Reducer
 export default eventSlice.reducer;

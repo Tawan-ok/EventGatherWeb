@@ -13,7 +13,14 @@ const Home: React.FC = () => {
   }, [dispatch]);
 
   return (
-    <div style={{ padding: '20px' }}>
+    <div style={{ 
+      display: 'flex', 
+      flexDirection: 'column', 
+      justifyContent: 'center', 
+      alignItems: 'center', 
+      minHeight: '100vh', 
+      padding: '300px' 
+    }}>
       <Typography variant="h4" gutterBottom>
         Events List
       </Typography>
@@ -21,6 +28,7 @@ const Home: React.FC = () => {
       <Button
         variant="contained"
         color="primary"
+        style={{ marginBottom: '20px' }}
         onClick={() => window.location.href = '/create-event'}
       >
         Create Event
@@ -29,11 +37,12 @@ const Home: React.FC = () => {
       {loading && <CircularProgress />}
       {error && <Typography color="error">{error}</Typography>}
 
-      <div style={{ marginTop: '20px' }}>
+      <div style={{ width: '100%', maxWidth: '600px' }}>
         {events.map((event) => (
           <Card key={event.id} style={{ marginBottom: '10px' }}>
             <CardContent>
-              <Typography variant="h6">{event.name}</Typography>
+              <Typography variant="h6">Title: {event.title}</Typography>
+              <Typography>Description: {event.description}</Typography>
               <Typography>Date: {event.date}</Typography>
               <Typography>Location: {event.location}</Typography>
             </CardContent>
